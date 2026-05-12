@@ -19,9 +19,9 @@ level: 2
 - Резервные поставщики
 
 ## Связи с другими агентами
-- [[tim|Тим — Sales Lead]]: закупки под сделки
-- [[natasha|Наташа — E-commerce Lead]]: ассортимент бутика
-- [[sveta|Света — CFO]]: маржа закупок
-- [[denis|Денис — Logistics Lead]]: логистика поставок
-- [[lera|Лера — Legal]]: договоры
-- [[alex|Алекс — Chief of Staff]]: срывы поставок
+- [Тим — Sales Lead](tim.md): закупки под сделки
+- [Наташа — E-commerce Lead](natasha.md): ассортимент бутика
+- [Света — CFO](sveta.md): маржа закупок
+- [Денис — Logistics Lead](denis.md): логистика поставок
+- [Лера — Legal](lera.md): договоры
+- [Алекс — Chief of Staff](alex.md): срывы поставок

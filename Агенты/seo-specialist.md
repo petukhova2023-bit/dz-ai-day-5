@@ -20,8 +20,8 @@ SEO для лендингов, сайтов и контента.
 - Мониторинг позиций
 
 ## Связи с другими агентами
-- [[cmo|CMO]]: каналы и стратегия
-- [[frontend-engineer|Frontend Engineer]]: технический SEO
-- [[sofya|Софья — Personal Brand Lead]]: контент-планы
-- [[research-agent|Research Agent]]: конкуренты в поиске
-- [[backend-engineer|Backend Engineer]]: schema и sitemap
+- [CMO](cmo.md): каналы и стратегия
+- [Frontend Engineer](frontend-engineer.md): технический SEO
+- [Софья — Personal Brand Lead](sofya.md): контент-планы
+- [Research Agent](research-agent.md): конкуренты в поиске
+- [Backend Engineer](backend-engineer.md): schema и sitemap

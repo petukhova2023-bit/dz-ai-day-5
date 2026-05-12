@@ -20,14 +20,14 @@ level: 2
 - Технические риски и компромиссы.
 
 ## Связи
-- [[product-manager]] — приоритизация и требования.
-- [[frontend-engineer]] — интерфейс и клиентская часть.
-- [[backend-engineer]] — API, база данных, бизнес-логика.
-- [[qa-engineer]] — качество и тестирование.
-- [[devops-engineer]] — деплой и мониторинг.
+- [product-manager](product-manager.md) — приоритизация и требования.
+- [frontend-engineer](frontend-engineer.md) — интерфейс и клиентская часть.
+- [backend-engineer](backend-engineer.md) — API, база данных, бизнес-логика.
+- [qa-engineer](qa-engineer.md) — качество и тестирование.
+- [devops-engineer](devops-engineer.md) — деплой и мониторинг.
 
 ## Скиллы
-- [[system-architecture]]
-- [[technical-planning]]
-- [[auth-security]]
-- [[monitoring-observability]]
+- [system-architecture](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/system-architecture.md)
+- [technical-planning](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/technical-planning.md)
+- [auth-security](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/auth-security.md)
+- [monitoring-observability](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/monitoring-observability.md)

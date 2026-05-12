@@ -21,8 +21,8 @@ level: 2
 - Compliance и юр-риски в антикризисном режиме
 
 ## Связи с другими агентами
-- [[tim|Тим — Sales Lead]]: договоры по B2B-сделкам
-- [[mira|Мира — Tender Specialist]]: тендерная документация
-- [[natasha|Наташа — E-commerce Lead]]: договоры с поставщиками
-- [[sveta|Света — CFO]]: финансовые риски и штрафы
-- [[alex|Алекс — Chief of Staff]]: эскалация юр-рисков
+- [Тим — Sales Lead](tim.md): договоры по B2B-сделкам
+- [Мира — Tender Specialist](mira.md): тендерная документация
+- [Наташа — E-commerce Lead](natasha.md): договоры с поставщиками
+- [Света — CFO](sveta.md): финансовые риски и штрафы
+- [Алекс — Chief of Staff](alex.md): эскалация юр-рисков

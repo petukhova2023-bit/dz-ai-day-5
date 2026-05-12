@@ -21,9 +21,9 @@ level: 2
 - Графика для соцсетей
 
 ## Связи с другими агентами
-- [[sofya|Софья — Personal Brand Lead]]: визуал личного бренда
-- [[natasha|Наташа — E-commerce Lead]]: упаковка бутика
-- [[cmo|CMO]]: маркетинговые материалы
-- [[ads-manager|Ads Manager]]: креативы для тестов
-- [[frontend-engineer|Frontend Engineer]]: макеты под верстку
-- [[alex|Алекс — Chief of Staff]]: согласование решений
+- [Софья — Personal Brand Lead](sofya.md): визуал личного бренда
+- [Наташа — E-commerce Lead](natasha.md): упаковка бутика
+- [CMO](cmo.md): маркетинговые материалы
+- [Ads Manager](ads-manager.md): креативы для тестов
+- [Frontend Engineer](frontend-engineer.md): макеты под верстку
+- [Алекс — Chief of Staff](alex.md): согласование решений

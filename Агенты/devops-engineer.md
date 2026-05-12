@@ -20,12 +20,12 @@ level: 2
 - Диагностика падений.
 
 ## Связи
-- [[cto]] — инфраструктурные решения.
-- [[backend-engineer]] — серверные настройки.
-- [[frontend-engineer]] — сборка и публикация.
-- [[qa-engineer]] — тестовые окружения.
+- [cto](cto.md) — инфраструктурные решения.
+- [backend-engineer](backend-engineer.md) — серверные настройки.
+- [frontend-engineer](frontend-engineer.md) — сборка и публикация.
+- [qa-engineer](qa-engineer.md) — тестовые окружения.
 
 ## Скиллы
-- [[devops-deploy]]
-- [[monitoring-observability]]
-- [[technical-planning]]
+- [devops-deploy](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/devops-deploy.md)
+- [monitoring-observability](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/monitoring-observability.md)
+- [technical-planning](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/technical-planning.md)

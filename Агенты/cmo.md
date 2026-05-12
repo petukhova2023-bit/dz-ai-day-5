@@ -20,14 +20,14 @@ level: 2
 - Рекламные гипотезы.
 
 ## Связи
-- [[product-manager]] — продуктовые преимущества.
-- [[research-agent]] — рынок и аудитория.
-- [[content-generator]] — тексты и смыслы.
-- [[ads-manager]] — рекламные кампании.
-- [[community-manager]] — обратная связь аудитории.
+- [product-manager](product-manager.md) — продуктовые преимущества.
+- [research-agent](research-agent.md) — рынок и аудитория.
+- [content-generator](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/content-generator.md) — тексты и смыслы.
+- [ads-manager](ads-manager.md) — рекламные кампании.
+- [community-manager](community-manager.md) — обратная связь аудитории.
 
 ## Скиллы
-- [[marketing-strategy]]
-- [[competitor-research]]
-- [[content-generator]]
-- [[ads-campaigns]]
+- [marketing-strategy](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/marketing-strategy.md)
+- [competitor-research](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/competitor-research.md)
+- [content-generator](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/content-generator.md)
+- [ads-campaigns](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/ads-campaigns.md)

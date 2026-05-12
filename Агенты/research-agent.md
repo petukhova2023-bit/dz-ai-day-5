@@ -20,12 +20,12 @@ level: 2
 - Выжимки и отчёты для Product Manager и CMO.
 
 ## Связи
-- [[product-manager]] — продуктовые решения.
-- [[cmo]] — маркетинговая стратегия.
-- [[ads-manager]] — рекламные гипотезы.
-- [[alex]] — сводки и приоритеты.
+- [product-manager](product-manager.md) — продуктовые решения.
+- [cmo](cmo.md) — маркетинговая стратегия.
+- [ads-manager](ads-manager.md) — рекламные гипотезы.
+- [alex](alex.md) — сводки и приоритеты.
 
 ## Скиллы
-- [[competitor-research]]
-- [[user-research]]
-- [[product-requirements]]
+- [competitor-research](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/competitor-research.md)
+- [user-research](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/user-research.md)
+- [product-requirements](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/product-requirements.md)

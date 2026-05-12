@@ -20,14 +20,14 @@ level: 2
 - Сбор обратной связи.
 
 ## Связи
-- [[cto]] — техническая реализуемость.
-- [[research-agent]] — аудитория, конкуренты, гипотезы.
-- [[frontend-engineer]] — пользовательский опыт.
-- [[qa-engineer]] — проверка сценариев.
-- [[cmo]] — позиционирование и офферы.
+- [cto](cto.md) — техническая реализуемость.
+- [research-agent](research-agent.md) — аудитория, конкуренты, гипотезы.
+- [frontend-engineer](frontend-engineer.md) — пользовательский опыт.
+- [qa-engineer](qa-engineer.md) — проверка сценариев.
+- [cmo](cmo.md) — позиционирование и офферы.
 
 ## Скиллы
-- [[product-requirements]]
-- [[user-scenarios]]
-- [[competitor-research]]
-- [[feedback-loop]]
+- [product-requirements](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/product-requirements.md)
+- [user-scenarios](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/user-scenarios.md)
+- [competitor-research](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/competitor-research.md)
+- [feedback-loop](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/feedback-loop.md)

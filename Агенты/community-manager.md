@@ -20,12 +20,12 @@ level: 2
 - Поддержание живого контакта с аудиторией.
 
 ## Связи
-- [[cmo]] — маркетинговые смыслы.
-- [[product-manager]] — продуктовые улучшения.
-- [[ads-manager]] — реакции на рекламу.
-- [[alex]] — сводки и риски.
+- [cmo](cmo.md) — маркетинговые смыслы.
+- [product-manager](product-manager.md) — продуктовые улучшения.
+- [ads-manager](ads-manager.md) — реакции на рекламу.
+- [alex](alex.md) — сводки и риски.
 
 ## Скиллы
-- [[community-management]]
-- [[feedback-loop]]
-- [[content-generator]]
+- [community-management](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/community-management.md)
+- [feedback-loop](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/feedback-loop.md)
+- [content-generator](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/content-generator.md)

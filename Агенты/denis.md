@@ -20,8 +20,8 @@ level: 2
 - Транспортные компании
 
 ## Связи с другими агентами
-- [[tim|Тим — Sales Lead]]: отгрузки B2B-направления
-- [[natasha|Наташа — E-commerce Lead]]: доставки бутика
-- [[pasha|Паша — Procurement Lead]]: входящие поставки
-- [[sveta|Света — CFO]]: остатки в деньгах
-- [[alex|Алекс — Chief of Staff]]: срывы доставки
+- [Тим — Sales Lead](tim.md): отгрузки B2B-направления
+- [Наташа — E-commerce Lead](natasha.md): доставки бутика
+- [Паша — Procurement Lead](pasha.md): входящие поставки
+- [Света — CFO](sveta.md): остатки в деньгах
+- [Алекс — Chief of Staff](alex.md): срывы доставки

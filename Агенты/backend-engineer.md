@@ -20,12 +20,12 @@ level: 2
 - Производительность и обработка ошибок.
 
 ## Связи
-- [[frontend-engineer]] — API для интерфейса.
-- [[cto]] — архитектура.
-- [[qa-engineer]] — тесты и баги.
-- [[devops-engineer]] — окружения и деплой.
+- [frontend-engineer](frontend-engineer.md) — API для интерфейса.
+- [cto](cto.md) — архитектура.
+- [qa-engineer](qa-engineer.md) — тесты и баги.
+- [devops-engineer](devops-engineer.md) — окружения и деплой.
 
 ## Скиллы
-- [[backend-api]]
-- [[database-design]]
-- [[auth-security]]
+- [backend-api](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/backend-api.md)
+- [database-design](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/database-design.md)
+- [auth-security](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/auth-security.md)

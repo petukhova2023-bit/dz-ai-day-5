@@ -20,12 +20,12 @@ level: 2
 - Финальный чек перед релизом.
 
 ## Связи
-- [[product-manager]] — критерии приемки.
-- [[frontend-engineer]] — UI-баги.
-- [[backend-engineer]] — API-баги.
-- [[devops-engineer]] — проверки окружений.
+- [product-manager](product-manager.md) — критерии приемки.
+- [frontend-engineer](frontend-engineer.md) — UI-баги.
+- [backend-engineer](backend-engineer.md) — API-баги.
+- [devops-engineer](devops-engineer.md) — проверки окружений.
 
 ## Скиллы
-- [[qa-testing]]
-- [[bug-reporting]]
-- [[user-scenarios]]
+- [qa-testing](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/qa-testing.md)
+- [bug-reporting](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/bug-reporting.md)
+- [user-scenarios](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/user-scenarios.md)

@@ -20,8 +20,8 @@ level: 2
 - Налоговый календарь
 
 ## Связи с другими агентами
-- [[sveta|Света — CFO]]: расхождения учёта
-- [[nikita|Никита — Operations Lead]]: дедлайны налогов
-- [[tim|Тим — Sales Lead]]: акты по B2B-сделкам
-- [[natasha|Наташа — E-commerce Lead]]: первичка бутика
-- [[alex|Алекс — Chief of Staff]]: налоговые риски
+- [Света — CFO](sveta.md): расхождения учёта
+- [Никита — Operations Lead](nikita.md): дедлайны налогов
+- [Тим — Sales Lead](tim.md): акты по B2B-сделкам
+- [Наташа — E-commerce Lead](natasha.md): первичка бутика
+- [Алекс — Chief of Staff](alex.md): налоговые риски

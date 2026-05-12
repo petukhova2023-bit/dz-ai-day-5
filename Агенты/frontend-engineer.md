@@ -20,12 +20,12 @@ level: 2
 - Визуальная проверка интерфейса.
 
 ## Связи
-- [[product-manager]] — сценарии и требования.
-- [[backend-engineer]] — API-контракты.
-- [[qa-engineer]] — баги интерфейса.
-- [[cto]] — технические решения.
+- [product-manager](product-manager.md) — сценарии и требования.
+- [backend-engineer](backend-engineer.md) — API-контракты.
+- [qa-engineer](qa-engineer.md) — баги интерфейса.
+- [cto](cto.md) — технические решения.
 
 ## Скиллы
-- [[frontend-development]]
-- [[responsive-design]]
-- [[ui-ux-review]]
+- [frontend-development](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/frontend-development.md)
+- [responsive-design](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/responsive-design.md)
+- [ui-ux-review](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/ui-ux-review.md)

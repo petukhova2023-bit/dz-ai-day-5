@@ -20,7 +20,7 @@ level: 2
 - Подготовка к встречам
 
 ## Связи с другими агентами
-- [[alex|Алекс — Chief of Staff]]: общая загрузка
-- [[nikita|Никита — Operations Lead]]: операционные дедлайны
-- [[sofya|Софья — Personal Brand Lead]]: логистика выступлений
-- [[tim|Тим — Sales Lead]], [[natasha|Наташа — E-commerce Lead]], [[mira|Мира — Tender Specialist]]: встречи с партнёрами
+- [Алекс — Chief of Staff](alex.md): общая загрузка
+- [Никита — Operations Lead](nikita.md): операционные дедлайны
+- [Софья — Personal Brand Lead](sofya.md): логистика выступлений
+- [Тим — Sales Lead](tim.md), [Наташа — E-commerce Lead](natasha.md), [Мира — Tender Specialist](mira.md): встречи с партнёрами

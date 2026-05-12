@@ -20,12 +20,12 @@ level: 2
 - Отчёты по результатам.
 
 ## Связи
-- [[cmo]] — стратегия и позиционирование.
-- [[research-agent]] — аудитория и конкуренты.
-- [[content-generator]] — тексты креативов.
-- [[community-manager]] — реакции аудитории.
+- [cmo](cmo.md) — стратегия и позиционирование.
+- [research-agent](research-agent.md) — аудитория и конкуренты.
+- [content-generator](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/content-generator.md) — тексты креативов.
+- [community-manager](community-manager.md) — реакции аудитории.
 
 ## Скиллы
-- [[ads-campaigns]]
-- [[creative-testing]]
-- [[competitor-research]]
+- [ads-campaigns](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/ads-campaigns.md)
+- [creative-testing](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/creative-testing.md)
+- [competitor-research](../%D0%A1%D0%BA%D0%B8%D0%BB%D0%BB%D1%8B/competitor-research.md)

@@ -20,9 +20,9 @@ level: 2
 - Дашборды для PM, CMO, Алекса
 
 ## Связи с другими агентами
-- [[product-manager|Product Manager]]: метрики продукта
-- [[cmo|CMO]]: маркетинговая аналитика
-- [[ads-manager|Ads Manager]]: эффективность кампаний
-- [[sveta|Света — CFO]]: стыковка продукт/финансы
-- [[cto|CTO]]: трекинг в коде
-- [[alex|Алекс — Chief of Staff]]: ключевые цифры
+- [Product Manager](product-manager.md): метрики продукта
+- [CMO](cmo.md): маркетинговая аналитика
+- [Ads Manager](ads-manager.md): эффективность кампаний
+- [Света — CFO](sveta.md): стыковка продукт/финансы
+- [CTO](cto.md): трекинг в коде
+- [Алекс — Chief of Staff](alex.md): ключевые цифры
