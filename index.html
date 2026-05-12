@@ -203,7 +203,7 @@
   <div class="filter-group">
     <h2>Отображение</h2>
     <label class="toggle"><input type="checkbox" id="show-skills"> Показать скиллы</label>
-    <label class="toggle"><input type="checkbox" id="show-chains"> Цепочки взаимодействия</label>
+    <label class="toggle"><input type="checkbox" id="show-chains" checked> Цепочки взаимодействия</label>
   </div>
   <div class="filter-group">
     <h2>Цепочки</h2>
@@ -315,7 +315,7 @@ const CHAINS = [
 const state = {
   activeContours: new Set(['business','product','marketing','operations']),
   showSkills: false,
-  showChains: false,
+  showChains: true,
   selectedChain: null,
   selectedNode: null,
   search: ''
@@ -454,23 +454,26 @@ function buildEdges() {
     });
   }
 
-  if (state.showChains && state.selectedChain) {
-    const chain = CHAINS.find(c => c.id === state.selectedChain);
-    if (chain) {
+  if (state.showChains) {
+    const chainsToDraw = state.selectedChain
+      ? CHAINS.filter(c => c.id === state.selectedChain)
+      : CHAINS;
+    const isFiltered = state.selectedChain !== null;
+    chainsToDraw.forEach(chain => {
       const color = CHAIN_COLORS[(chain.id - 1) % CHAIN_COLORS.length];
       for (let i = 0; i < chain.steps.length - 1; i++) {
         edges.push({
           from: chain.steps[i],
           to: chain.steps[i + 1],
-          color: { color, opacity: 0.9 },
-          width: 3,
-          arrows: { to: { enabled: true, scaleFactor: 0.6 } },
-          smooth: { type: 'curvedCW', roundness: 0.2 + (i * 0.05) },
+          color: { color, opacity: isFiltered ? 0.9 : 0.5 },
+          width: isFiltered ? 3 : 1.5,
+          arrows: { to: { enabled: true, scaleFactor: isFiltered ? 0.6 : 0.4 } },
+          smooth: { type: 'curvedCW', roundness: 0.15 + ((chain.id + i) * 0.04) % 0.4 },
           label: i === 0 ? '#' + chain.id : '',
-          font: { color, size: 11, background: '#0d1117', strokeWidth: 0 }
+          font: { color, size: isFiltered ? 11 : 10, background: '#0d1117', strokeWidth: 0 }
         });
       }
-    }
+    });
   }
 
   return edges;
@@ -768,12 +771,6 @@ document.getElementById('show-skills').addEventListener('change', e => {
 });
 document.getElementById('show-chains').addEventListener('change', e => {
   state.showChains = e.target.checked;
-  if (state.showChains && !state.selectedChain) {
-    state.selectedChain = 1;
-    document.querySelectorAll('#chain-list .filter-item').forEach(f => {
-      f.style.background = parseInt(f.dataset.chain, 10) === 1 ? '#21262d' : '';
-    });
-  }
   render();
 });
 document.getElementById('search').addEventListener('input', e => {
