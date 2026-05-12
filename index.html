@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Карта мульти-агентной системы</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.6/standalone/umd/vis-network.min.js"
+        onerror="this.onerror=null;this.src='https://unpkg.com/vis-network@9.1.6/standalone/umd/vis-network.min.js';"></script>
+<style>
+  *,*::before,*::after { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    display: grid;
+    grid-template-columns: 260px 1fr 340px;
+    grid-template-rows: 56px 1fr;
+  }
+  header {
+    grid-column: 1 / -1;
+    padding: 0 24px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  header h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0.2px; }
+  header .stats { display: flex; gap: 18px; font-size: 13px; color: #8b949e; }
+  header .stats b { color: #e6edf3; font-weight: 600; }
+  header .search {
+    margin-left: auto;
+    padding: 6px 12px;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #e6edf3;
+    font-size: 13px;
+    width: 220px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  header .search:focus { border-color: #58a6ff; }
+  aside.left, aside.right {
+    background: #161b22;
+    overflow-y: auto;
+    padding: 16px;
+    font-size: 13px;
+  }
+  aside.left { border-right: 1px solid #30363d; }
+  aside.right { border-left: 1px solid #30363d; }
+  aside h2 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #8b949e;
+    margin: 0 0 10px;
+    font-weight: 600;
+  }
+  .filter-group { margin-bottom: 20px; }
+  .filter-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.1s;
+  }
+  .filter-item:hover { background: #21262d; }
+  .filter-item .dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .filter-item .count { margin-left: auto; color: #6e7681; font-size: 11px; }
+  .filter-item.disabled { opacity: 0.35; }
+  .filter-item.disabled .dot { background: #30363d !important; }
+  .toggle {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px; cursor: pointer; user-select: none;
+    border-radius: 6px;
+  }
+  .toggle:hover { background: #21262d; }
+  .toggle input { cursor: pointer; }
+  #graph { background: #0d1117; position: relative; width: 100%; height: 100%; min-height: 400px; }
+  #graph-error {
+    position: absolute; inset: 0;
+    display: none; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px; text-align: center;
+    color: #f87171; background: #1a0f0f;
+    font-size: 13px; line-height: 1.6;
+  }
+  #graph-error.show { display: flex; }
+  #graph-error code { background: #0d1117; padding: 2px 6px; border-radius: 4px; color: #fbbf24; }
+  #graph-loading {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #6e7681; font-size: 13px;
+    pointer-events: none;
+  }
+  #graph .legend {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(22, 27, 34, 0.85);
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    backdrop-filter: blur(6px);
+  }
+  #graph .legend .row { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+  #graph .legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+  #detail .empty {
+    color: #6e7681;
+    text-align: center;
+    margin-top: 60px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  #detail h3 { margin: 0 0 4px; font-size: 17px; font-weight: 600; }
+  #detail .role { color: #8b949e; font-size: 13px; margin-bottom: 14px; }
+  #detail .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-bottom: 14px;
+    color: #0d1117;
+  }
+  #detail .section { margin-bottom: 18px; }
+  #detail .section h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #8b949e;
+    margin: 0 0 8px;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+  }
+  #detail .skills { display: flex; flex-wrap: wrap; gap: 5px; }
+  #detail .skills span {
+    background: #21262d;
+    padding: 4px 9px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #c9d1d9;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  #detail .skills span:hover { background: #30363d; }
+  #detail .desc { line-height: 1.55; color: #c9d1d9; font-size: 13px; }
+  #detail .chain-step {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 4px 0; font-size: 12px; color: #c9d1d9;
+  }
+  #detail .chain-step .num {
+    background: #30363d; color: #8b949e;
+    width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; flex-shrink: 0;
+  }
+  #detail .neighbor {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px; border-radius: 5px;
+    font-size: 12px; cursor: pointer;
+    transition: background 0.1s;
+  }
+  #detail .neighbor:hover { background: #21262d; }
+  #detail .neighbor-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  #detail .neighbor-name { color: #c9d1d9; flex: 1; }
+  #detail .neighbor-badges { display: flex; gap: 3px; flex-wrap: wrap; }
+  #detail .mini-chain {
+    font-size: 10px; padding: 1px 5px;
+    border-radius: 3px; color: #0d1117;
+    font-weight: 600;
+  }
+  .hint { color: #6e7681; font-size: 12px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Карта мульти-агентной системы</h1>
+  <div class="stats">
+    <span><b id="stat-agents">26</b> агентов</span>
+    <span><b id="stat-skills">36</b> скиллов</span>
+    <span><b>4</b> контура</span>
+    <span><b>8</b> цепочек</span>
+  </div>
+  <input id="search" class="search" placeholder="Поиск агента или скилла…">
+</header>
+
+<aside class="left">
+  <div class="filter-group">
+    <h2>Контуры</h2>
+    <div id="contour-filters"></div>
+  </div>
+  <div class="filter-group">
+    <h2>Отображение</h2>
+    <label class="toggle"><input type="checkbox" id="show-skills"> Показать скиллы</label>
+    <label class="toggle"><input type="checkbox" id="show-chains"> Цепочки взаимодействия</label>
+  </div>
+  <div class="filter-group">
+    <h2>Цепочки</h2>
+    <div id="chain-list"></div>
+  </div>
+  <div class="filter-group">
+    <h2>Подсказки</h2>
+    <div class="hint">
+      • Клик по узлу — детали справа<br>
+      • Колесо — масштаб<br>
+      • Drag — перемещение<br>
+      • Двойной клик — фокус
+    </div>
+  </div>
+</aside>
+
+<div id="graph">
+  <div id="graph-loading">Загружаю граф…</div>
+  <div id="graph-error">
+    <div style="font-size:32px;margin-bottom:12px">⚠️</div>
+    <div><b>Граф не загрузился.</b></div>
+    <div id="graph-error-msg" style="margin-top:8px;color:#fca5a5"></div>
+    <div style="margin-top:12px;color:#8b949e">Возможные причины: нет интернета, CDN заблокирован, или ошибка JS.<br>Открой DevTools (<code>⌘⌥I</code>) → вкладка Console.</div>
+  </div>
+  <div class="legend">
+    <div class="row"><span class="dot" style="background:#f5a623"></span> Координатор</div>
+    <div class="row"><span class="dot" style="background:#5b8def"></span> Бизнес</div>
+    <div class="row"><span class="dot" style="background:#23b783"></span> Продукт</div>
+    <div class="row"><span class="dot" style="background:#e8a44c"></span> Маркетинг</div>
+    <div class="row"><span class="dot" style="background:#a560d0"></span> Операционный</div>
+    <div class="row"><span class="dot" style="background:#6e7681"></span> Скилл</div>
+  </div>
+</div>
+
+<aside class="right" id="detail">
+  <div class="empty">Нажми на узел графа,<br>чтобы увидеть подробности</div>
+</aside>
+
+<script>
+const COLORS = {
+  core:       '#f5a623',
+  business:   '#5b8def',
+  product:    '#23b783',
+  marketing:  '#e8a44c',
+  operations: '#a560d0',
+  skill:      '#6e7681',
+  edge:       '#30363d'
+};
+
+const CHAIN_COLORS = ['#ff6b6b', '#4ecdc4', '#ffd93d', '#a78bfa', '#fb7185', '#34d399', '#60a5fa', '#f97316'];
+
+const CONTOURS = [
+  { id: 'business',   label: 'Бизнес-контур',          color: COLORS.business },
+  { id: 'product',    label: 'Продуктово-технический', color: COLORS.product },
+  { id: 'marketing',  label: 'Маркетинговый контур',   color: COLORS.marketing },
+  { id: 'operations', label: 'Операционный контур',    color: COLORS.operations }
+];
+
+const AGENTS = [
+  { id: 'alex', name: 'Алекс — Chief of Staff', contour: 'core', skills: ['agent-router', 'weekly-digest'], desc: 'Главный координатор и маршрутизатор задач. Принимает входящие, выбирает агента, собирает дайджесты, держит общую картину по всем контурам.' },
+  { id: 'tim', name: 'Тим — Sales Lead', contour: 'business', skills: ['sales-analysis', 'crm-automation', 'email-sequences', 'deal-closer'], desc: 'B2B-продажи технического оборудования, CRM, конверсия, сделки.' },
+  { id: 'sveta', name: 'Света — CFO', contour: 'business', skills: ['financial-dashboard'], desc: 'Финансы CFO-уровня: cash flow, маржа, дебиторка, кредиторка, финансовое планирование.' },
+  { id: 'anya', name: 'Аня — Bookkeeper', contour: 'business', skills: [], desc: 'Бухгалтерия: первичка, налоги, акты, сверки.' },
+  { id: 'dasha', name: 'Даша — Personal Assistant', contour: 'business', skills: ['task-tracker', 'weekly-digest'], desc: 'Личный ассистент: календарь, поездки, переписка, подготовка к встречам.' },
+  { id: 'sofya', name: 'Софья — Personal Brand Lead', contour: 'marketing', skills: ['content-generator', 'social-automation', 'presentation-master', 'email-sequences', 'reels-creator'], desc: 'Личный бренд эксперта: контент, презентации, выступления.' },
+  { id: 'natasha', name: 'Наташа — E-commerce Lead', contour: 'business', skills: ['content-generator', 'social-automation'], desc: 'E-commerce бутик, товарная экономика, трафик, ассортимент.' },
+  { id: 'mira', name: 'Мира — Tender Specialist', contour: 'business', skills: ['tender-scraper'], desc: 'Тендеры, мониторинг площадок, поиск и анализ заявок.' },
+  { id: 'olya', name: 'Оля — HR Lead', contour: 'business', skills: ['candidate-sourcing'], desc: 'HR, поиск сильных продажников, найм.' },
+  { id: 'lera', name: 'Лера — Legal', contour: 'business', skills: [], desc: 'Юрист: договоры, тендерная документация, претензии.' },
+  { id: 'kira', name: 'Кира — Brand Designer', contour: 'business', skills: ['presentation-master'], desc: 'Brand-дизайнер: брендбук, презентации, креативы.' },
+  { id: 'pasha', name: 'Паша — Procurement Lead', contour: 'business', skills: [], desc: 'Закупки: поставщики, цены, сроки.' },
+  { id: 'denis', name: 'Денис — Logistics Lead', contour: 'business', skills: [], desc: 'Логистика: склад, отгрузки, маркетплейсы.' },
+  { id: 'nikita', name: 'Никита — Operations Lead', contour: 'operations', skills: ['task-tracker', 'weekly-digest'], desc: 'Операционный контроль: дедлайны, исполнение, контроль задач.' },
+  { id: 'cto', name: 'CTO', contour: 'product', skills: ['system-architecture', 'technical-planning', 'auth-security', 'monitoring-observability'], desc: 'Архитектура, безопасность, технические решения.' },
+  { id: 'product-manager', name: 'Product Manager', contour: 'product', skills: ['product-requirements', 'user-scenarios', 'competitor-research', 'feedback-loop'], desc: 'MVP, требования, сценарии, приоритизация.' },
+  { id: 'research-agent', name: 'Research Agent', contour: 'product', skills: ['competitor-research', 'user-research', 'product-requirements'], desc: 'Аудитория, рынок, конкуренты, исследования.' },
+  { id: 'frontend-engineer', name: 'Frontend Engineer', contour: 'product', skills: ['frontend-development', 'responsive-design', 'ui-ux-review'], desc: 'Интерфейс, адаптив, UX-проверка.' },
+  { id: 'backend-engineer', name: 'Backend Engineer', contour: 'product', skills: ['backend-api', 'database-design', 'auth-security'], desc: 'API, база данных, авторизация.' },
+  { id: 'qa-engineer', name: 'QA Engineer', contour: 'product', skills: ['qa-testing', 'bug-reporting', 'user-scenarios'], desc: 'Тестирование, баг-репорты, регрессия.' },
+  { id: 'devops-engineer', name: 'DevOps Engineer', contour: 'product', skills: ['devops-deploy', 'monitoring-observability', 'technical-planning'], desc: 'Запуск, деплой, мониторинг.' },
+  { id: 'seo-specialist', name: 'SEO Specialist', contour: 'product', skills: ['marketing-strategy', 'content-generator', 'competitor-research'], desc: 'Семантика, оптимизация лендингов, технический SEO.' },
+  { id: 'data-analyst', name: 'Data Analyst', contour: 'product', skills: ['financial-dashboard'], desc: 'Продуктовая и веб-аналитика, A/B-тесты.' },
+  { id: 'cmo', name: 'CMO', contour: 'marketing', skills: ['marketing-strategy', 'competitor-research', 'content-generator', 'ads-campaigns'], desc: 'Маркетинговая стратегия продукта.' },
+  { id: 'ads-manager', name: 'Ads Manager', contour: 'marketing', skills: ['ads-campaigns', 'creative-testing', 'competitor-research'], desc: 'Реклама: гипотезы, креативы, тесты.' },
+  { id: 'community-manager', name: 'Community Manager', contour: 'marketing', skills: ['community-management', 'feedback-loop', 'content-generator'], desc: 'Сообщество, обратная связь, инсайты.' }
+];
+
+const SKILLS = [
+  'ads-campaigns','agent-router','auth-security','backend-api','bug-reporting',
+  'candidate-sourcing','community-management','competitor-research','content-generator','creative-testing',
+  'crm-automation','database-design','deal-closer','devops-deploy','email-sequences',
+  'feedback-loop','financial-dashboard','find-skill','frontend-development','marketing-strategy',
+  'monitoring-observability','presentation-master','product-requirements','qa-testing','reels-creator',
+  'responsive-design','sales-analysis','social-automation','system-architecture','task-tracker',
+  'technical-planning','tender-scraper','ui-ux-review','user-research','user-scenarios','weekly-digest'
+];
+
+const CHAINS = [
+  { id: 1, label: 'Маркетинговый запуск', steps: ['alex','research-agent','cmo','ads-manager','kira','seo-specialist','data-analyst'] },
+  { id: 2, label: 'B2B-сделка',             steps: ['tim','lera','pasha','denis','sveta','anya','alex'] },
+  { id: 3, label: 'Тендер',                  steps: ['mira','lera','tim','sveta','pasha','alex'] },
+  { id: 4, label: 'Контент личного бренда', steps: ['sofya','research-agent','kira','community-manager','alex'] },
+  { id: 5, label: 'Финансовая сводка',       steps: ['anya','sveta','nikita','alex'] },
+  { id: 6, label: 'Разработка продукта',     steps: ['product-manager','research-agent','cto','frontend-engineer','backend-engineer','qa-engineer','devops-engineer','cmo','ads-manager','data-analyst','community-manager','alex'] },
+  { id: 7, label: 'E-commerce бутик',        steps: ['natasha','pasha','denis','lera','kira','seo-specialist','sveta','alex'] },
+  { id: 8, label: 'Календарь владельца',     steps: ['dasha','sofya','nikita','alex'] }
+];
+
+const state = {
+  activeContours: new Set(['business','product','marketing','operations']),
+  showSkills: false,
+  showChains: false,
+  selectedChain: null,
+  selectedNode: null,
+  search: ''
+};
+
+function getContour(id) { return CONTOURS.find(c => c.id === id); }
+function getAgent(id)   { return AGENTS.find(a => a.id === id); }
+
+function getNeighbors(agentId) {
+  const map = new Map();
+  CHAINS.forEach(ch => {
+    const idx = ch.steps.indexOf(agentId);
+    if (idx === -1) return;
+    [idx - 1, idx + 1].forEach(i => {
+      if (i < 0 || i >= ch.steps.length) return;
+      const other = ch.steps[i];
+      if (!map.has(other)) map.set(other, { chains: [], direction: [] });
+      map.get(other).chains.push(ch.id);
+      map.get(other).direction.push(i < idx ? '←' : '→');
+    });
+  });
+  return map;
+}
+
+function buildNodes() {
+  const nodes = [];
+
+  nodes.push({
+    id: 'root',
+    label: 'Карта системы',
+    color: { background: '#1f2937', border: '#374151' },
+    font: { color: '#8b949e', size: 11 },
+    shape: 'dot', size: 8,
+    physics: false, fixed: { x: true, y: true }, x: 0, y: 0
+  });
+
+  CONTOURS.forEach(c => {
+    if (!state.activeContours.has(c.id)) return;
+    nodes.push({
+      id: 'c-' + c.id,
+      label: c.label,
+      color: { background: c.color, border: c.color },
+      font: { color: '#0d1117', size: 14, face: 'sans-serif', bold: true },
+      shape: 'box',
+      margin: 10,
+      borderWidth: 2,
+      group: 'contour'
+    });
+  });
+
+  AGENTS.forEach(a => {
+    if (a.contour !== 'core' && !state.activeContours.has(a.contour)) return;
+    const color = a.contour === 'core' ? COLORS.core : getContour(a.contour).color;
+    const matchesSearch = !state.search || a.name.toLowerCase().includes(state.search) || a.id.includes(state.search);
+    const isCore = a.contour === 'core';
+    nodes.push({
+      id: a.id,
+      label: a.name,
+      color: {
+        background: color,
+        border: matchesSearch ? '#e6edf3' : color,
+        highlight: { background: color, border: '#e6edf3' }
+      },
+      font: isCore
+        ? { color: '#0d1117', size: 14, face: 'sans-serif', bold: { color: '#0d1117', size: 14 } }
+        : { color: '#e6edf3', size: 13, face: 'sans-serif', strokeWidth: 4, strokeColor: '#0d1117', multi: false },
+      shape: isCore ? 'ellipse' : 'dot',
+      size: isCore ? 32 : 20,
+      borderWidth: matchesSearch ? 3 : 1.5,
+      group: 'agent'
+    });
+  });
+
+  if (state.showSkills) {
+    const usedSkills = new Set();
+    AGENTS.forEach(a => {
+      if (a.contour !== 'core' && !state.activeContours.has(a.contour)) return;
+      a.skills.forEach(s => usedSkills.add(s));
+    });
+    SKILLS.forEach(s => {
+      if (!usedSkills.has(s) && s !== 'find-skill') return;
+      const matchesSearch = !state.search || s.includes(state.search);
+      nodes.push({
+        id: 's-' + s,
+        label: s,
+        color: { background: COLORS.skill, border: COLORS.skill },
+        font: { color: '#c9d1d9', size: 11, strokeWidth: 3, strokeColor: '#0d1117' },
+        shape: 'dot', size: 7,
+        borderWidth: matchesSearch ? 2 : 0,
+        group: 'skill'
+      });
+    });
+  }
+
+  return nodes;
+}
+
+function buildEdges() {
+  const edges = [];
+
+  CONTOURS.forEach(c => {
+    if (!state.activeContours.has(c.id)) return;
+    edges.push({
+      from: 'root', to: 'c-' + c.id,
+      color: { color: c.color, opacity: 0.4 },
+      width: 2, smooth: false
+    });
+  });
+
+  AGENTS.forEach(a => {
+    if (a.contour === 'core') return;
+    if (!state.activeContours.has(a.contour)) return;
+    edges.push({
+      from: 'c-' + a.contour, to: a.id,
+      color: { color: getContour(a.contour).color, opacity: 0.35 },
+      width: 1.2, smooth: false
+    });
+  });
+
+  edges.push({
+    from: 'root', to: 'alex',
+    color: { color: COLORS.core, opacity: 0.6 },
+    width: 2, dashes: false
+  });
+
+  if (state.showSkills) {
+    AGENTS.forEach(a => {
+      if (a.contour !== 'core' && !state.activeContours.has(a.contour)) return;
+      a.skills.forEach(s => {
+        edges.push({
+          from: a.id, to: 's-' + s,
+          color: { color: COLORS.skill, opacity: 0.25 },
+          width: 0.8, smooth: false, dashes: [2, 4]
+        });
+      });
+    });
+  }
+
+  if (state.showChains && state.selectedChain) {
+    const chain = CHAINS.find(c => c.id === state.selectedChain);
+    if (chain) {
+      const color = CHAIN_COLORS[(chain.id - 1) % CHAIN_COLORS.length];
+      for (let i = 0; i < chain.steps.length - 1; i++) {
+        edges.push({
+          from: chain.steps[i],
+          to: chain.steps[i + 1],
+          color: { color, opacity: 0.9 },
+          width: 3,
+          arrows: { to: { enabled: true, scaleFactor: 0.6 } },
+          smooth: { type: 'curvedCW', roundness: 0.2 + (i * 0.05) },
+          label: i === 0 ? '#' + chain.id : '',
+          font: { color, size: 11, background: '#0d1117', strokeWidth: 0 }
+        });
+      }
+    }
+  }
+
+  return edges;
+}
+
+let network;
+
+function showGraphError(msg) {
+  document.getElementById('graph-loading').style.display = 'none';
+  const err = document.getElementById('graph-error');
+  err.classList.add('show');
+  document.getElementById('graph-error-msg').textContent = msg;
+}
+
+function render() {
+  const container = document.getElementById('graph');
+  if (typeof vis === 'undefined' || !vis.Network) {
+    showGraphError('Библиотека vis-network не загрузилась с CDN.');
+    return;
+  }
+  document.getElementById('graph-loading').style.display = 'none';
+  document.getElementById('graph-error').classList.remove('show');
+  let nodes, edges;
+  try {
+    nodes = new vis.DataSet(buildNodes());
+    edges = new vis.DataSet(buildEdges());
+  } catch (e) {
+    showGraphError('Ошибка построения данных: ' + e.message);
+    console.error(e);
+    return;
+  }
+
+  const options = {
+    nodes: {
+      borderWidth: 1.5,
+      shadow: { enabled: true, color: 'rgba(0,0,0,0.4)', size: 8, x: 0, y: 2 }
+    },
+    edges: { smooth: { type: 'continuous' } },
+    physics: {
+      enabled: true,
+      solver: 'forceAtlas2Based',
+      forceAtlas2Based: {
+        gravitationalConstant: -80,
+        centralGravity: 0.015,
+        springLength: 110,
+        springConstant: 0.08,
+        damping: 0.5,
+        avoidOverlap: 0.6
+      },
+      stabilization: { iterations: 250, fit: true }
+    },
+    interaction: {
+      hover: true,
+      tooltipDelay: 200,
+      zoomView: true,
+      dragView: true
+    }
+  };
+
+  try {
+    if (network) network.destroy();
+    network = new vis.Network(container, { nodes, edges }, options);
+  } catch (e) {
+    showGraphError('Ошибка инициализации vis.Network: ' + e.message);
+    console.error(e);
+    return;
+  }
+
+  network.on('click', params => {
+    if (params.nodes.length === 0) return;
+    const id = params.nodes[0];
+    selectNode(id);
+  });
+
+  network.on('doubleClick', params => {
+    if (params.nodes.length === 0) return;
+    network.focus(params.nodes[0], { scale: 1.5, animation: { duration: 600, easingFunction: 'easeInOutQuad' } });
+  });
+}
+
+function selectNode(id) {
+  const detail = document.getElementById('detail');
+  state.selectedNode = id;
+
+  if (id.startsWith('s-')) {
+    const skill = id.slice(2);
+    const users = AGENTS.filter(a => a.skills.includes(skill));
+    detail.innerHTML = `
+      <span class="badge" style="background:${COLORS.skill};color:#fff">скилл</span>
+      <h3>${escapeHtml(skill)}</h3>
+      <div class="role">Переиспользуемая процедура</div>
+      <div class="section">
+        <h4>Используют агенты (${users.length})</h4>
+        <div class="skills">${users.map(u => `<span data-id="${u.id}" class="agent-link">${escapeHtml(u.name)}</span>`).join('')}</div>
+      </div>
+    `;
+    bindLinks();
+    return;
+  }
+
+  if (id.startsWith('c-')) {
+    const cid = id.slice(2);
+    const c = getContour(cid);
+    const inContour = AGENTS.filter(a => a.contour === cid);
+    detail.innerHTML = `
+      <span class="badge" style="background:${c.color}">контур</span>
+      <h3>${escapeHtml(c.label)}</h3>
+      <div class="role">${inContour.length} ${plural(inContour.length, 'агент', 'агента', 'агентов')} в контуре</div>
+      <div class="section">
+        <h4>Агенты контура</h4>
+        <div class="skills">${inContour.map(a => `<span data-id="${a.id}" class="agent-link">${escapeHtml(a.name)}</span>`).join('')}</div>
+      </div>
+    `;
+    bindLinks();
+    return;
+  }
+
+  if (id === 'root') {
+    detail.innerHTML = `
+      <span class="badge" style="background:#374151;color:#e6edf3">обзор</span>
+      <h3>Карта системы</h3>
+      <div class="role">Корень графа</div>
+      <div class="section">
+        <h4>Контуры</h4>
+        <div class="skills">${CONTOURS.map(c => `<span data-cid="${c.id}" class="contour-link" style="background:${c.color};color:#0d1117">${escapeHtml(c.label)}</span>`).join('')}</div>
+      </div>
+      <div class="section">
+        <h4>Координатор</h4>
+        <div class="skills"><span data-id="alex" class="agent-link">Алекс — Chief of Staff</span></div>
+      </div>
+    `;
+    bindLinks();
+    return;
+  }
+
+  const agent = getAgent(id);
+  if (!agent) return;
+  const color = agent.contour === 'core' ? COLORS.core : getContour(agent.contour).color;
+  const contourLabel = agent.contour === 'core' ? 'координатор' : getContour(agent.contour).label;
+  const participatesIn = CHAINS.filter(ch => ch.steps.includes(agent.id));
+  const neighbors = getNeighbors(agent.id);
+
+  detail.innerHTML = `
+    <span class="badge" style="background:${color}">${escapeHtml(contourLabel)}</span>
+    <h3>${escapeHtml(agent.name)}</h3>
+    <div class="role">${escapeHtml(agent.desc)}</div>
+
+    <div class="section">
+      <h4>Скиллы (${agent.skills.length})</h4>
+      <div class="skills">${agent.skills.length === 0
+        ? '<span style="color:#6e7681;cursor:default">— нет привязанных скиллов</span>'
+        : agent.skills.map(s => `<span data-skill="${s}" class="skill-link">${escapeHtml(s)}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="section">
+      <h4>Связан с агентами (${neighbors.size})</h4>
+      ${neighbors.size === 0
+        ? '<div style="color:#6e7681;font-size:12px">— нет связей через цепочки</div>'
+        : [...neighbors.entries()].map(([nid, info]) => {
+            const n = getAgent(nid);
+            const nColor = n.contour === 'core' ? COLORS.core : getContour(n.contour).color;
+            const chainBadges = info.chains.map((c, i) =>
+              `<span class="mini-chain" style="background:${CHAIN_COLORS[(c-1) % CHAIN_COLORS.length]}">${info.direction[i]}${c}</span>`
+            ).join('');
+            return `
+              <div class="neighbor" data-id="${nid}">
+                <span class="neighbor-dot" style="background:${nColor}"></span>
+                <span class="neighbor-name">${escapeHtml(n.name)}</span>
+                <span class="neighbor-badges">${chainBadges}</span>
+              </div>
+            `;
+          }).join('')}
+    </div>
+
+    <div class="section">
+      <h4>Участвует в цепочках (${participatesIn.length})</h4>
+      ${participatesIn.length === 0
+        ? '<div style="color:#6e7681;font-size:12px">— нет</div>'
+        : participatesIn.map(ch => `
+          <div class="chain-step" data-chain="${ch.id}" style="cursor:pointer">
+            <span class="num" style="background:${CHAIN_COLORS[(ch.id-1) % CHAIN_COLORS.length]};color:#0d1117">${ch.id}</span>
+            <span>${escapeHtml(ch.label)}</span>
+          </div>
+        `).join('')}
+    </div>
+  `;
+  bindLinks();
+}
+
+function bindLinks() {
+  document.querySelectorAll('.agent-link').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.id;
+      selectNode(id);
+      if (network) network.focus(id, { scale: 1.3, animation: { duration: 500 } });
+    });
+  });
+  document.querySelectorAll('.skill-link').forEach(el => {
+    el.addEventListener('click', () => {
+      const s = el.dataset.skill;
+      if (!state.showSkills) {
+        document.getElementById('show-skills').checked = true;
+        state.showSkills = true;
+        render();
+        setTimeout(() => selectNode('s-' + s), 800);
+      } else {
+        selectNode('s-' + s);
+      }
+    });
+  });
+  document.querySelectorAll('.contour-link').forEach(el => {
+    el.addEventListener('click', () => selectNode('c-' + el.dataset.cid));
+  });
+  document.querySelectorAll('[data-chain]').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = parseInt(el.dataset.chain, 10);
+      state.selectedChain = id;
+      state.showChains = true;
+      document.getElementById('show-chains').checked = true;
+      document.querySelectorAll('#chain-list .filter-item').forEach(f => {
+        f.style.background = parseInt(f.dataset.chain, 10) === id ? '#21262d' : '';
+      });
+      render();
+    });
+  });
+  document.querySelectorAll('#detail .neighbor').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.id;
+      selectNode(id);
+      if (network) network.focus(id, { scale: 1.3, animation: { duration: 500 } });
+    });
+  });
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function plural(n, one, two, many) {
+  const m = n % 100, k = n % 10;
+  if (m >= 11 && m <= 19) return many;
+  if (k === 1) return one;
+  if (k >= 2 && k <= 4) return two;
+  return many;
+}
+
+function renderContourFilters() {
+  const c = document.getElementById('contour-filters');
+  c.innerHTML = CONTOURS.map(co => {
+    const count = AGENTS.filter(a => a.contour === co.id).length;
+    return `
+      <div class="filter-item" data-contour="${co.id}">
+        <span class="dot" style="background:${co.color}"></span>
+        <span>${co.label}</span>
+        <span class="count">${count}</span>
+      </div>
+    `;
+  }).join('');
+  c.querySelectorAll('.filter-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = el.dataset.contour;
+      if (state.activeContours.has(id)) state.activeContours.delete(id);
+      else state.activeContours.add(id);
+      el.classList.toggle('disabled', !state.activeContours.has(id));
+      render();
+    });
+  });
+}
+
+function renderChainList() {
+  const c = document.getElementById('chain-list');
+  c.innerHTML = CHAINS.map(ch => `
+    <div class="filter-item" data-chain="${ch.id}">
+      <span class="dot" style="background:${CHAIN_COLORS[(ch.id-1) % CHAIN_COLORS.length]}"></span>
+      <span>${ch.id}. ${escapeHtml(ch.label)}</span>
+    </div>
+  `).join('');
+  c.querySelectorAll('.filter-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const id = parseInt(el.dataset.chain, 10);
+      state.selectedChain = state.selectedChain === id ? null : id;
+      state.showChains = state.selectedChain !== null;
+      document.getElementById('show-chains').checked = state.showChains;
+      c.querySelectorAll('.filter-item').forEach(f => {
+        f.style.background = parseInt(f.dataset.chain, 10) === state.selectedChain ? '#21262d' : '';
+      });
+      render();
+    });
+  });
+}
+
+document.getElementById('show-skills').addEventListener('change', e => {
+  state.showSkills = e.target.checked;
+  render();
+});
+document.getElementById('show-chains').addEventListener('change', e => {
+  state.showChains = e.target.checked;
+  if (state.showChains && !state.selectedChain) {
+    state.selectedChain = 1;
+    document.querySelectorAll('#chain-list .filter-item').forEach(f => {
+      f.style.background = parseInt(f.dataset.chain, 10) === 1 ? '#21262d' : '';
+    });
+  }
+  render();
+});
+document.getElementById('search').addEventListener('input', e => {
+  state.search = e.target.value.toLowerCase().trim();
+  render();
+});
+
+renderContourFilters();
+renderChainList();
+
+function tryRender(attempts) {
+  attempts = attempts || 0;
+  if (typeof vis !== 'undefined' && vis.Network) {
+    render();
+    return;
+  }
+  if (attempts >= 30) {
+    showGraphError('vis-network не загрузился за 6 секунд. Проверь интернет или открой консоль (⌘⌥I).');
+    return;
+  }
+  setTimeout(function() { tryRender(attempts + 1); }, 200);
+}
+
+tryRender();
+</script>
+</body>
+</html>
