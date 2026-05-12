@@ -542,6 +542,13 @@ function render() {
     return;
   }
 
+  network.once('stabilizationIterationsDone', () => {
+    network.setOptions({ physics: { enabled: false } });
+  });
+  setTimeout(() => {
+    if (network) network.setOptions({ physics: { enabled: false } });
+  }, 4000);
+
   network.on('click', params => {
     if (params.nodes.length === 0) return;
     const id = params.nodes[0];
